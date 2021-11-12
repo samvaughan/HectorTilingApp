@@ -17,9 +17,12 @@ app.css.append_css({
     "external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 })
 
-df_targets = pd.read_csv('/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_120_m22_targets.csv')
-df_standards = pd.read_csv('/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_120_m22_standards.csv')
-df_guides = pd.read_csv('/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_120_m22_guides.csv')
+field = '030':
+
+
+df_targets = pd.read_csv(f'/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_{field}_m22_targets.csv')
+df_standards = pd.read_csv(f'/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_{field}_m22_standards.csv')
+df_guides = pd.read_csv(f'/Users/samvaughan/Science/Hector/Targets/Commissioning/StarFields/results/StarCatalogues/Panstarrs_match_Gaia_{field}_m22_guides.csv')
 
 df_targets['type'] = 0
 df_standards['type'] = 1
@@ -33,7 +36,7 @@ proximity_arcseconds = 220
 proximity = proximity_arcseconds / 60 / 60
 radius = 0.97 # Plate radius in degrees
 
-x_centre = 120
+x_centre = int(field)
 y_centre = -22
 
 
@@ -82,6 +85,9 @@ def create_figure(x_centre=x_centre, y_centre=y_centre, size_in_pixels=700):
         customdata=df_targets.loc[:, ['ID', 'type']],
         mode='markers',
         name='Targets',
+        hovertemplate =
+    'RA=%{x:.3f}, DEC=%{y:.4f}, <b>%{text}</b>',
+    text = ['r-mag={:.2f}'.format(mag) for mag in df_targets['r_mag'].values],
         marker=dict(
                     color=colours[0],
                     symbol=symbols[0],
@@ -98,6 +104,9 @@ def create_figure(x_centre=x_centre, y_centre=y_centre, size_in_pixels=700):
         customdata=df_guides.loc[:, ['ID', 'type']],
         mode='markers',
         name='Guides',
+        hovertemplate =
+    'RA=%{x:.3f}, DEC=%{y:.4f}, <b>%{text}</b>',
+    text = ['r-mag={:.2f}'.format(mag) for mag in df_guides['r_mag'].values],
         marker=dict(
                     color=colours[1],
                     symbol=symbols[1],
@@ -114,6 +123,9 @@ def create_figure(x_centre=x_centre, y_centre=y_centre, size_in_pixels=700):
         customdata=df_standards.loc[:, ['ID', 'type']],
         mode='markers',
         name='Standard Stars',
+        hovertemplate =
+    'RA=%{x:.3f}, DEC=%{y:.4f}, <b>%{text}</b>',
+    text = ['r-mag={:.2f}'.format(mag) for mag in df_standards['r_mag'].values],
         marker=dict(
                     color=colours[2],
                     symbol=symbols[2],
@@ -164,7 +176,7 @@ tables = {0:df_targets, 1:df_guides, 2:df_standards}
 
 app.layout = html.Div([
                     html.Hr(),
-                    html.H1("Hector Tiling App", style={'text-align':'center'}),
+                    html.H1(f"Hector Tiling App: Field {field}", style={'text-align':'center'}),
                     html.Div(children=[
                         html.Div(children=[
                         html.Div(["Tile RA: ", dcc.Input(id='input-RA', value=x_centre, type='number', step='any', debounce=True)]), 
